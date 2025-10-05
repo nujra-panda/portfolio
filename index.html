@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>portfolio</title>
+    <meta name="color-scheme" content="dark light" />
+    <style>
+      html,body { background:#fafbfe; color:#0f1624; }
+      html.dark, .dark body { background:#070a11; color:#d3d9e6; }
+      html.theme-preload * { transition:none !important; }
+      html.enable-theme-transitions body { transition: background-color .3s, color .3s; }
+    </style>
+    <!-- Hardened early theme application to prevent white flash -->
+    <script>
+      (function() {
+        try {
+          const storageKey='theme';
+          const stored=localStorage.getItem(storageKey);
+          const mql=window.matchMedia('(prefers-color-scheme: dark)');
+          const system=mql.matches;
+          const root=document.documentElement;
+          const dark = stored==='dark' || (stored==null && system);
+          if(dark) root.classList.add('dark');
+          root.classList.add('theme-preload');
+          if(dark){
+            root.style.backgroundColor='#070a11';
+            root.style.color='#d3d9e6';
+          } else {
+            root.style.backgroundColor='#fafbfe';
+            root.style.color='#0f1624';
+          }
+          if(stored==null){
+            mql.addEventListener('change', e => {
+              if(!localStorage.getItem(storageKey)){
+                if(e.matches) root.classList.add('dark'); else root.classList.remove('dark');
+              }
+            });
+          }
+          requestAnimationFrame(()=>{
+            root.classList.remove('theme-preload');
+            root.classList.add('enable-theme-transitions');
+            setTimeout(()=>{ root.style.backgroundColor=''; root.style.color=''; }, 250);
+          });
+        } catch(e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
